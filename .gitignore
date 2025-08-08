@@ -1,15 +1,19 @@
 # Dependencies
 node_modules/
-npm-debug.log*
+client/node_modules/
+server/node_modules/
 
 # Environment variables
 .env
-.env.local
-
-# IDE files
-.vscode/settings.json
-.DS_Store
+server/.env
 
 # Build files
-dist/
-build/
+client/build/
+server/dist/
+
+# Firebase
+server/firebase-service-account.json
+
+# IDE
+.vscode/
+.DS_Store
