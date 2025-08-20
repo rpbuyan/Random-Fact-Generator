@@ -60,6 +60,30 @@ app.post('/api/facts', async (req, res) => {
   }
 });
 
+// Health check endpoints
+app.get("/api/health", async (req, res) => {
+  try {
+    await db.collection('_health').doc('test').set({
+      status: 'ok',
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({
+      status: 'ok',
+      firebase: 'connection successful',
+      environment: process.nextTick.NODE_ENV || 'development',
+    });
+  }
+
+  catch (error) {
+    res.status(500).json({
+      status: 'error',
+      firebase: 'disconnected',
+      error: error.message
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
