@@ -9,21 +9,18 @@ const PORT = process.env.PORT || 5000;
 
 // Implement Firebase error handling to check successful connection
 let db = null;
-let firebaseError = null;
+let admin = null;
 
 try {
-  console.log("Attempting to initialize Firebase...");
-  console.log("NODE_ENV: ", process.env.NODE_ENV);
-  console.log("FIREBASE_SERVICE_ACCOUNT_KEY: ", !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-
+  console.log('Importing Firebase configuration...');
   const firebaseConfig = require('./config/firebase');
   db = firebaseConfig.db;
-  console.log('✅ Firebase initialized successfully');
+  admin = firebaseConfig.admin;
+  console.log('✅ Firebase modules imported successfully');
 } 
 
 catch (error) {
-  console.error('❌ Firebase initialization failed:', error.message);
-  firebaseError = error.message;
+  console.error('❌ Firebase import failed:', error.message);
 }
 
 // Middleware components
@@ -79,6 +76,14 @@ app.post('/api/facts', async (req, res) => {
   }
 });
 
+app.get('/api/test', (req, res) => {
+  res.json({
+    message: 'Server is working',
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV
+  });
+});
+
 // Health check endpoints
 app.get("/api/health", async (req, res) => {
   try {
@@ -104,34 +109,40 @@ app.get("/api/health", async (req, res) => {
 });
 
 // Implemented a scenario to handle when Firebase isn't connecting
-app.get("/api/health", async (req, res) => {
-  try {
-    if (!db) {
-      return res.status(500).json({
-        status: 'error',
-        firebase: 'disconnected',
-        error: 'Firebase not initializing - check environment variables'
-      });
-    }
+app.get('/api/health', async (req, res) => {
+  console.log('Health check requested');
+  console.log('db exists:', !!db);
+  console.log('admin exists:', !!admin);
 
-    await db.collection('_health').doc('test').set({
-      status: 'ok',
-      timestamp: new Date()
-    });
-
-    res.json({
-      status: 'ok',
-      firebase: ' connected',
-      environment: process.env.NODE_ENV || 'development',
-      timestamp: new Date().toISOString()
+  if (!db) {
+    console.error('db is null/undefined');
+    return res.status(500).json({ 
+      status: 'error', 
+      firebase: 'disconnected',
+      error: 'Database connection not available'
     });
   }
 
-  catch (error) {
-    res.status(500).json({
-      status: 'error',
+  try {
+    console.log('Attempting to write to Firestore...');
+    await db.collection('_health').doc('test').set({
+      status: 'ok',
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    console.log('✅ Firestore write successful');
+    res.json({ 
+      status: 'ok', 
+      firebase: 'connected',
+      environment: process.env.NODE_ENV,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Firestore operation failed:', error.message);
+    res.status(500).json({ 
+      status: 'error', 
       firebase: 'disconnected',
-      error: error.message
+      error: error.message 
     });
   }
 });
@@ -139,5 +150,5 @@ app.get("/api/health", async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
-  console.log(`Firebase: ${db ? 'Connected' : 'Disconnected'}`);
+  console.log(`Firebase available: ${!!db}`);
 });

@@ -54,3 +54,5 @@ try {
   console.error('Firebase initialization failed:', error.message);
   throw error;
 }
+
+module.exports = { admin, db };
