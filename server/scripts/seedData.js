@@ -21,6 +21,45 @@ const sampleFacts = [
             url: "https://www.youtube.com",
             author: "Eceer Nayub"
         }
+    },
+
+    {
+        fact: "Octopuses have three hearts and blue blood. Two hearts pump blood to the gills, while the third pumps blood to the rest of the body.",
+        category: "animals",
+        source: {
+            title: "National Geographic",
+            url: "https://www.nationalgeographic.com/animals/invertebrates/facts/octopus",
+            author: "National Geographic Society"
+        }
+    },
+
+    {
+        fact: "A group of flamingos is called a 'flamboyance'. They get their pink color from eating shrimp and algae.",
+        category: "animals",
+        source: {
+            title: "San Diego Zoo",
+            url: "https://zoo.sandiegozoo.org/animals/flamingo",
+            author: "San Diego Zoo Wildlife Alliance"
+        }
+    },
+
+    {
+        fact: "The shortest war in history lasted only 38-45 minutes. It was between Britain and Zanzibar in 1896.",
+        category: "history",
+        source: {
+            title: "Britannica",
+            url: "https://www.britannica.com/event/Anglo-Zanzibar-War",
+            author: "Encyclopedia Britannica"
+        }
+    },
+    {
+        fact: "Bananas are berries, but strawberries aren't. Botanically, a berry must have seeds inside its flesh.",
+        category: "science",
+        source: {
+            title: "Scientific American",
+            url: "https://www.scientificamerican.com/article/why-are-bananas-berries/",
+            author: "Scientific American"
+        }
     }
 ];
 
