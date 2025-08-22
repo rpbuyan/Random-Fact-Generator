@@ -1,4 +1,4 @@
-const { db } = require('./firebase-seed');
+const { db } = require('../config/firebase');
 const factsService = require('../services/factsService');
 
 // Ingest some sample data into the firebase
