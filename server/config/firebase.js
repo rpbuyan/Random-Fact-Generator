@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 
 let serviceAccount;
+let db = null;
 
 try {
   if (process.env.NODE_ENV === 'production') {
@@ -44,11 +45,10 @@ try {
     });
   }
 
-  const db = admin.firestore();
+  db = admin.firestore();     // Assign Firestore instance to db so it can be used globally
   
   console.log(`Firebase initialized for project: ${serviceAccount.project_id}`);
   
-  module.exports = { admin, db };
 
 } catch (error) {
   console.error('Firebase initialization failed:', error.message);
