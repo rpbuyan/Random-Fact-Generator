@@ -1,3 +1,4 @@
+const { db } = require('../config/firebase');
 const factsService = require('../services/factsService');
 
 // Ingest some sample data into the firebase
@@ -65,17 +66,28 @@ const sampleFacts = [
 
 async function seedDB() {
     try {
+        console.log("Seeding database with sample facts");
+
         for (const fact of sampleFacts) {
-            await factsService.addFact(fact);
+            const docRef = await db.collection('facts').add({
+                ...fact,
+                createdAt: new Date()
+            });
+
             console.log('Added fact:', fact.fact.substring(0, 30) + '...');
-
+            console.log('Document ID:', docRef.id);
         }
-
+        
+        // Test 
         console.log("Database seeded successfully!");
+        console.log("Added ${sampleFacts.length} sample facts to Firebase.");
+
+        process.exit(0);
     }
 
     catch (error) {
         console.error("Error seeding database:", error);
+        process.exit(1);
     }
 }
 
