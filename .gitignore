@@ -3,6 +3,8 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
+# Vite variables
+
 # Environment variables
 .env
 .env.local
